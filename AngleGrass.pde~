@@ -1,0 +1,44 @@
+class AngleGrass{
+  float[] joints;
+  float[] posx,posy;
+  float edgeHeight=40;
+  
+  AngleGrass(float posx, float posy, int numJoints, float edgeHeight){
+    this.posx=new float[numJoints+1];
+    this.posy=new float[numJoints+1];
+    this.posx[0]=posx;
+    this.posy[0]=posy;
+    this.edgeHeight=edgeHeight;
+    joints=new float[numJoints];
+    float rand=random(1000);
+    for(int i=0; i<joints.length;i++){
+      joints[i]=rand*(i+1);
+    }
+  }
+  
+  void display(){
+    updatePos();
+    pushMatrix();
+    translate(posx[0],height);
+    rotate(radians(posx[1]));
+    line(0,0,0,-edgeHeight);
+    for(int i=1;i<joints.length+1;i++){
+      translate(0,-edgeHeight);
+      rotate(radians(posx[i]));
+      line(0,0,0,-edgeHeight);
+    }
+    popMatrix();
+  }
+  
+  void updatePos(){
+    for(int i=0;i<joints.length;i++){
+      posx[i+1]=perlinPos(joints[i],-45,45);
+      posy[i+1]=posy[0]-(i+1)*edgeHeight;
+      joints[i]+=0.005;
+    }
+  }
+  
+  float perlinPos(float val,float mapBase, float mapCeiling){
+   return map(noise(val),0,1,mapBase,mapCeiling); 
+  }
+}
